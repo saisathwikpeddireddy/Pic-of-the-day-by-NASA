@@ -1,5 +1,15 @@
 
-const NASA_API_KEY = 'hQS4Rq2qLl2z04c7bMNPZLyc3X6fHgdkBG6aQcYd'; 
+let NASA_API_KEY = '';
+
+function promptForApiKey() {
+  NASA_API_KEY = prompt('Please enter your NASA API Key:');
+  if (!NASA_API_KEY) {
+    alert('API Key is required to fetch data. Please reload the page and provide a valid key. Optionally, You can also refer to the README for the APIKey.');
+    throw new Error('API Key not provided');
+  }
+}
+
+promptForApiKey();
 const NASA_API_BASE_URL = 'https://api.nasa.gov/planetary/apod';
 const FIRST_APOD_DATE = '1995-06-16';
 const CACHE_DURATION = 5 * 60 * 1000; 
