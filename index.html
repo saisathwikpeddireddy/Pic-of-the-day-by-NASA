@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Space Pic Explorer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="stars-bg"></div>
+
+  <header class="header">
+    <div class="container header-container">
+      <div class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <circle cx="12" cy="12" r="4"></circle>
+          <line x1="12" y1="2" x2="12" y2="16"></line>
+          <line x1="22" y1="12" x2="16" y2="12"></line>
+          <line x1="8" y1="12" x2="2" y2="12"></line>
+          <line x1="12" y1="22" x2="12" y2="16"></line>
+        </svg>
+        <h1 class="site-title"> NASA -- Pic of the Day!</h1>
+      </div>
+      
+      <div class="date-selector">
+        <div class="date-display">
+          <svg xmlns="http://www.w3.org/2000/svg" class="calendar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span id="current-date">Today</span>
+        </div>
+        
+        <div class="date-controls">
+          <button id="prev-date" class="date-btn" aria-label="Previous day">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <input type="date" id="date-picker" aria-label="Select date">
+          <button id="next-date" class="date-btn" aria-label="Next day">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Loading space imagery...</p>
+      </div>
+
+      <div id="error" class="error-message" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <h2>Error Loading Data</h2>
+        <p id="error-message">An error occurred while fetching data. Please try again.</p>
+        <button id="retry-button" class="button outline-button">Retry</button>
+      </div>
+
+      <div id="content" class="content-container" style="display: none;">
+        <div class="media-panel">
+          <div class="media-container">
+            <div id="media-loading" class="media-loading">
+              <div class="spinner"></div>
+            </div>
+            <img id="apod-image" class="apod-image" alt="Astronomy Picture of the Day" src="" style="display: none;">
+            <iframe id="apod-video" class="apod-video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="display: none;"></iframe>
+            <button id="fullscreen-btn" class="fullscreen-button" aria-label="View full size">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+              </svg>
+              <span>Expand</span>
+            </button>
+          </div>
+          <div class="media-info">
+            <h2 id="apod-title" class="apod-title"></h2>
+            <p id="apod-copyright" class="apod-copyright"></p>
+          </div>
+        </div>
+
+        <div class="info-panel">
+          <div class="date-info">
+            <svg xmlns="http://www.w3.org/2000/svg" class="calendar-icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span id="display-date"></span>
+          </div>
+
+          <div class="explanation-card">
+            <p id="apod-explanation" class="apod-explanation"></p>
+            <button id="share-button" class="share-button">
+              <svg xmlns="http://www.w3.org/2000/svg" class="share-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+              </svg>
+              Share this view
+            </button>
+          </div>
+
+          <div class="media-metadata">
+            <h3>Image Information</h3>
+            <div class="metadata-item">
+              <span class="metadata-label">Type</span>
+              <span id="media-type" class="metadata-value">Image</span>
+            </div>
+            <div class="metadata-item">
+              <span class="metadata-label">Service Version</span>
+              <span id="service-version" class="metadata-value">v1</span>
+            </div>
+            <div id="hd-link-container" class="hd-link">
+              <a id="hd-link" href="#" target="_blank" rel="noopener noreferrer">
+                View High Resolution
+                <svg xmlns="http://www.w3.org/2000/svg" class="external-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <p class="credit">Space imagery by NASA</p>
+        </div>
+      </div>
+
+      <section class="recent-section">
+        <div class="recent-header">
+          <div>
+            <h2 class="recent-title">Recent Space Pics</h2>
+            <p class="recent-subtitle">
+              <svg xmlns="http://www.w3.org/2000/svg" class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span>Recent space images</span>
+            </p>
+          </div>
+          <button id="archive-button" class="archive-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="history-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 3v5h5"></path>
+              <path d="M3 3l7 7"></path>
+              <circle cx="12" cy="12" r="9"></circle>
+              <polyline points="12 7 12 12 15 15"></polyline>
+            </svg>
+            <span>View Full Archive</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+
+        <div id="recent-grid" class="recent-grid">
+          <div class="recent-placeholder"></div>
+          <div class="recent-placeholder"></div>
+          <div class="recent-placeholder"></div>
+          <div class="recent-placeholder"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-text">NASA - Space Pic of the Day</p>
+      <p class="footer-copyright">© Sai Sathwik Peddireddy, 2025</p>
+    </div>
+  </footer>
+
+  <div id="image-modal" class="modal">
+    <div class="modal-header">
+      <div class="modal-controls">
+        <button id="zoom-toggle" class="modal-button">
+          <svg id="zoom-in-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            <line x1="11" y1="8" x2="11" y2="14"></line>
+            <line x1="8" y1="11" x2="14" y2="11"></line>
+          </svg>
+          <svg id="zoom-out-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            <line x1="8" y1="11" x2="14" y2="11"></line>
+          </svg>
+          <span id="zoom-text">HD View</span>
+        </button>
+        <button id="download-button" class="modal-button">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Download</span>
+        </button>
+      </div>
+      <button id="close-modal" class="close-button" aria-label="Close modal">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    
+    <div id="modal-loading" class="modal-loading">
+      <div class="spinner large"></div>
+    </div>
+    
+    <div class="modal-content">
+      <img id="modal-image" alt="Astronomy Picture of the Day (Full Size)">
+    </div>
+    
+    <div class="modal-footer">
+      <div class="modal-info">
+        <h2 id="modal-title" class="modal-title"></h2>
+        <div class="modal-metadata">
+          <div class="modal-date">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span id="modal-date"></span>
+          </div>
+          <div id="modal-copyright-container" class="modal-copyright">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M15 9.354a4 4 0 1 0 0 5.292"></path>
+            </svg>
+            <span id="modal-copyright"></span>
+          </div>
+        </div>
+        <p id="modal-explanation" class="modal-explanation"></p>
+      </div>
+    </div>
+  </div>
+
+ 
+  <div id="toast" class="toast">
+    <div class="toast-content">
+      <svg id="toast-success-icon" xmlns="http://www.w3.org/2000/svg" class="toast-icon success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      <svg id="toast-error-icon" xmlns="http://www.w3.org/2000/svg" class="toast-icon error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <div class="toast-text">
+        <h4 id="toast-title" class="toast-title">Success</h4>
+        <p id="toast-message" class="toast-message">Action completed successfully.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
